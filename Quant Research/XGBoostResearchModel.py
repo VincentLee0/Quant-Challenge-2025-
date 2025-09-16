@@ -1,5 +1,6 @@
 from xgboost import XGBRegressor
 from model import ResearchModel
+from sklearn.metrics import r2_score
 
 class XGBoostResearchModel(ResearchModel):
     def __init__(
@@ -59,6 +60,10 @@ class XGBoostResearchModel(ResearchModel):
             self.feature_names_ = list(Xtrain.columns)
         else:
             self.feature_names_ = None
+        
+        Ypred = self.forward(Xval)
+        self.validation_score_ = r2_score(Yval, Ypred)
+        print(f"Validation R² score: {self.validation_score_:.4f}")
 
         return self
 

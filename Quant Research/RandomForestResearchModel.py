@@ -57,10 +57,10 @@ class RandomForestResearchModel(ResearchModel):
             self.feature_names_ = None
             
         # Calculate validation score if validation data is provided
-        if Xvalid is not None and Yvalid is not None:
-            y_pred = self.forward(Xvalid)
+        if Xval is not None and Yval is not None:
+            y_pred = self.forward(Xval)
             from sklearn.metrics import r2_score
-            self.validation_score_ = r2_score(Yvalid, y_pred)
+            self.validation_score_ = r2_score(Yval, y_pred)
             print(f"Validation R² score: {self.validation_score_:.4f}")
         else:
             self.validation_score_ = None
@@ -70,4 +70,4 @@ class RandomForestResearchModel(ResearchModel):
     def forward(self, x):
         if not self.fitted_:
             raise RuntimeError("Model is not fitted yet.")
-        return self.model.predict(X)
+        return self.model.predict(x)

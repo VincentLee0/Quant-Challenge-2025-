@@ -2,9 +2,9 @@ from data_test import get_processed_stock_data
 import pandas as pd
 from RandomForestResearchModel import RandomForestResearchModel
 from XGBoostResearchModel import XGBoostResearchModel
-
 import numpy as np
 import pandas as pd
+from sklearn.metrics import r2_score
 
 def process_data(
     column_to_predict: str = "Close",
@@ -74,28 +74,42 @@ def process_data(
     y = df[column_to_predict]
 
     Xtrain = X.iloc[:cut_train_end]
-    Ytrain = y.iloc[:cut_train_end]
+    Ytrain = np.array(y.iloc[:cut_train_end].values)
 
     Xval   = X.iloc[cut_val_start:cut_val_end]
-    Yval   = y.iloc[cut_val_start:cut_val_end]
+    Yval   = np.array(y.iloc[cut_val_start:cut_val_end].values)
 
     Xtest  = X.iloc[cut_val_end:]
-    Ytest  = y.iloc[cut_val_end:]
+    Ytest  = np.array(y.iloc[cut_val_end:].values)
 
-    return Xtrain, Ytrain, Xval, Yval, Xtest, Ytest
+    return Xtrain, Ytrain.reshape(-1), Xval, Yval.reshape(-1), Xtest, Ytest.reshape(-1)
+
+def test_model(model, Xtest, Ytest):
+    Ypred = model.forward(Xtest)
+    validation_score_ = r2_score(Ytest, Ypred)
+    return validation_score_
 
 column_to_predict = "Close"
 Xtrain, Ytrain, Xval, Yval, Xtest, Ytest = process_data(column_to_predict=column_to_predict)
 
-model = XGBoostResearchModel()
+model1 = RandomForestResearchModel()
+model2 = XGBoostResearchModel()
 
-model.fit(
+model1.fit(
     Xtrain=Xtrain,
     Ytrain=Ytrain,
     Xval=Xval,
     Yval=Yval
 )
 
-Ypred = model.forward(Xtest)
-print(Ypred)
-print(Ytest.values)
+model2.fit(
+    Xtrain=Xtrain,
+    Ytrain=Ytrain,
+    Xval=Xval,
+    Yval=Yval
+)
+
+validation_score1 = test_model(model1, Xtest, Ytest)
+validation_score2 = test_model(model2, Xtest, Ytest)
+print(f"RF Test R² score: {validation_score1:.4f}")
+print(f"XGB Test R² score: {validation_score2:.4f}")
