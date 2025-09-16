@@ -8,7 +8,6 @@ def get_processed_stock_data(ticker='AAPL', years=2, remove_year=2025, remove_mo
     end_date = date.today()
     start_date = end_date - timedelta(days=365 * years)
 
-    print(f"Fetching {years} year(s) of data...")
     original_data = yf.download(
         ticker,
         start=start_date,
