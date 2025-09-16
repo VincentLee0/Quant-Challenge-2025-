@@ -20,6 +20,3 @@ def get_processed_stock_data(ticker='AAPL', years=2, remove_year=2025, remove_mo
 
     processed_df = original_data[condition]
     return processed_df
-
-
-get_processed_stock_data()
