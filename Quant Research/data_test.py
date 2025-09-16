@@ -16,10 +16,8 @@ def get_processed_stock_data(ticker='AAPL', years=2, remove_year=2025, remove_mo
         progress=False
     )
 
-    print(f"Removing data for month {remove_month}/{remove_year}...")
-    condition = ~((original_data.index.month == remove_month) &
-                  (original_data.index.year == remove_year))
-
     processed_df = original_data[condition]
-
     return processed_df
+
+
+get_processed_stock_data()
