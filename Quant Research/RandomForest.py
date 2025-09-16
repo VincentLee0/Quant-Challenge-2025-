@@ -50,3 +50,10 @@ class RandomForestResearchModel(ResearchModel):
             #Train the model
             model.fit(X_train_valid, y_train_valid)
             self.models[target] = model
+    def forward(self, x):
+        if not self.models:
+            raise ValueError("Model must be fitted before making a prediction")
+        predictions = pd.DataFrame(indexx = x.index)
+        for target, model in self.model.items():
+            predictions[target] = model.predict(x)
+        return predictions
