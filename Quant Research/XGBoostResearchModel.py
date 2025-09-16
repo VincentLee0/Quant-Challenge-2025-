@@ -1,12 +1,12 @@
 from xgboost import XGBRegressor
 from model import ResearchModel
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
 
 class XGBoostResearchModel(ResearchModel):
     def __init__(
         self,
         *,
-        objective: str = "reg:squarederror",
+        objective: str = "reg:r2_score",
         n_estimators: int = 2000,
         learning_rate: float = 0.03,
         max_depth: int = 6,
