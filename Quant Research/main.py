@@ -89,7 +89,7 @@ def test_model(model, Xtest, Ytest):
     validation_score_ = r2_score(Ytest, Ypred)
     return validation_score_
 
-column_to_predict = "Close"
+column_to_predict = "High"
 Xtrain, Ytrain, Xval, Yval, Xtest, Ytest = process_data(column_to_predict=column_to_predict)
 
 model1 = RandomForestResearchModel()

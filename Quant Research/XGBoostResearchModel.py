@@ -36,14 +36,6 @@ class XGBoostResearchModel(ResearchModel):
         self.feature_names_ = None
 
     def fit(self, Xtrain, Ytrain, Xval=None, Yval=None):
-        """
-        Train the XGBoost regressor.
-        - Xtrain: 2D array or DataFrame of engineered features
-        - Ytrain: 1D array/Series of target values
-        - Xvalid/Yvalid: optional validation set for early stopping
-
-        If no validation passed, the model trains to n_estimators without early stopping.
-        """
         eval_set = None
         if Xval is not None and Yval is not None:
             eval_set = [(Xval, Yval)]
