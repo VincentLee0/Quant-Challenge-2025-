@@ -9,5 +9,5 @@ class ResearchModel(ABC):
         pass
 
     @abstractmethod
-    def fit(self, Xtrain, Ytrain):
+    def fit(self, Xtrain, Ytrain, XValid=None, YValid=None):
         pass
