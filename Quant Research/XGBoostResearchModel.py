@@ -1,12 +1,11 @@
 from xgboost import XGBRegressor
 from model import ResearchModel
-from sklearn.metrics import r2_score
 
 class XGBoostResearchModel(ResearchModel):
     def __init__(
         self,
         *,
-        objective: str = "reg:r2_score",
+        objective: str = "reg:squarederror",
         n_estimators: int = 2000,
         learning_rate: float = 0.03,
         max_depth: int = 6,
@@ -16,7 +15,6 @@ class XGBoostResearchModel(ResearchModel):
         reg_lambda: float = 1.0,
         n_jobs: int = -1,
         random_state: int = 42,
-        early_stopping_rounds: int = 100,
         tree_method = "hist"
     ):
         super().__init__()
@@ -33,7 +31,6 @@ class XGBoostResearchModel(ResearchModel):
             random_state=random_state,
             tree_method=tree_method,  # fast default; can be 'gpu_hist' if GPU available
         )
-        self.early_stopping_rounds = early_stopping_rounds
         self.fitted_ = False
         self.feature_names_ = None
 
@@ -55,7 +52,6 @@ class XGBoostResearchModel(ResearchModel):
             Ytrain,
             eval_set=eval_set,
             verbose=False,
-            early_stopping_rounds=self.early_stopping_rounds if eval_set else None,
         )
 
         self.fitted_ = True

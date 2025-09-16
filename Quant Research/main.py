@@ -1,7 +1,7 @@
 from data_test import get_processed_stock_data
 import pandas as pd
-from RandomForest import RandomForestResearchModel
-from xgboost import XGB
+from RandomForestResearchModel import RandomForestResearchModel
+from XGBoostResearchModel import XGBoostResearchModel
 
 def process_data():
     column_to_predict = "Close"
@@ -15,6 +15,6 @@ def process_data():
 
 XTrain, YTrain = process_data()
 
-model = RandomForestResearchModel()
+model = XGBoostResearchModel()
 
 model.fit(XTrain, YTrain)
