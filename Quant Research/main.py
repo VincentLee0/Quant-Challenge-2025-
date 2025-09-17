@@ -91,7 +91,7 @@ def process_data(
         Yval[i][0] = (Yval[i+1][0]-Yval[i][0])/Yval[i][0]
     Yval = np.array(Yval[:-1])
 
-    Xtest = X.iloc[cut_val_end:]
+    Xtest = X.iloc[cut_val_end:-1]
     Ytest = y.iloc[cut_val_end:].values
     for i in range(len(Ytest)-1):
         Ytest[i][0] = (Ytest[i+1][0]-Ytest[i][0])/Ytest[i][0]
