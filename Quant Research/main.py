@@ -79,25 +79,27 @@ def process_data(
     X = df.drop(columns=[column_to_predict])
     y = df[column_to_predict]
 
-    Xtrain = X.iloc[:cut_train_end]
-    Ytrain = y.iloc[:cut_train_end+1].values
-    for i in range(len(Ytrain)-1):
-        Ytrain[i][0] = (Ytrain[i+1][0]-Ytrain[i][0])/Ytrain[i][0]
-    Ytrain = np.array(Ytrain[:-1])
+    # Training Set
+    Xtrain = X.iloc[:cut_train_end - 1]
+    train_prices = y.iloc[:cut_train_end].values
+    Ytrain = (train_prices[1:] - train_prices[:-1]) / train_prices[:-1]
 
-    Xval = X.iloc[cut_val_start:cut_val_end]
-    Yval = y.iloc[cut_val_start:cut_val_end+1].values
-    for i in range(len(Yval)-1):
-        Yval[i][0] = (Yval[i+1][0]-Yval[i][0])/Yval[i][0]
-    Yval = np.array(Yval[:-1])
+    # Validation Set
+    Xval = X.iloc[cut_val_start:cut_val_end - 1]
+    val_prices = y.iloc[cut_val_start:cut_val_end].values
+    Yval = (val_prices[1:] - val_prices[:-1]) / val_prices[:-1]
 
+    # Test Set
     Xtest = X.iloc[cut_val_end:-1]
-    Ytest = y.iloc[cut_val_end:].values
-    for i in range(len(Ytest)-1):
-        Ytest[i][0] = (Ytest[i+1][0]-Ytest[i][0])/Ytest[i][0]
-    Ytest = np.array(Ytest[:-1])
+    test_prices = y.iloc[cut_val_end:].values
+    Ytest = (test_prices[1:] - test_prices[:-1]) / test_prices[:-1]
 
-    return Xtrain, Ytrain.reshape(-1), Xval, Yval.reshape(-1), Xtest, Ytest.reshape(-1)
+    # Replace any potential infinite values from division by zero with zero.
+    Ytrain = np.nan_to_num(Ytrain, nan=0.0, posinf=0.0, neginf=0.0)
+    Yval = np.nan_to_num(Yval, nan=0.0, posinf=0.0, neginf=0.0)
+    Ytest = np.nan_to_num(Ytest, nan=0.0, posinf=0.0, neginf=0.0)
+
+    return Xtrain, Ytrain, Xval, Yval, Xtest, Ytest
 
 
 def test_model(model, Xtest, Ytest):
