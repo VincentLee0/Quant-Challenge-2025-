@@ -8,6 +8,9 @@ from models.LinearRegressionResearchModel import LinearRegressionResearchModel
 
 from sklearn.metrics import r2_score
 
+# configure ticker
+ticker = "UBER"
+
 
 def process_data(
     column_to_predict: str = "Close",
@@ -21,6 +24,12 @@ def process_data(
     # Load and copy to avoid side effects
     df = get_processed_stock_data().copy()
 
+    # Handle multi-index columns from yfinance
+    if isinstance(df.columns, pd.MultiIndex):
+        # Convert multi-index columns to single-level columns
+        df.columns = [col[0] if isinstance(
+            col, tuple) else col for col in df.columns]
+
     # Sort chronologically
     if date_col is not None:
         if date_col not in df.columns:
@@ -30,6 +39,18 @@ def process_data(
     else:
         # Assume the index already represents time; still enforce sort just in case
         df = df.sort_index()
+
+    # Create lagged features for all columns except the target
+    columns_to_lag = [col for col in df.columns if col != column_to_predict]
+    for col in columns_to_lag:
+        df[f'{col}_lag1'] = df[col].shift(1)
+
+    # Drop the original contemporaneous features
+    columns_to_drop = [col for col in df.columns
+                       if not col.endswith('_lag1')
+                       and col != column_to_predict]
+    df = df.drop(columns=columns_to_drop)
+    df = df.dropna()  # Remove NaN from shifting
 
     N = len(df)
     if N < 10:
@@ -80,19 +101,24 @@ def process_data(
     y = df[column_to_predict]
 
     # Training Set
-    Xtrain = X.iloc[:cut_train_end - 1]
-    train_prices = y.iloc[:cut_train_end].values
-    Ytrain = (train_prices[1:] - train_prices[:-1]) / train_prices[:-1]
+    Xtrain = X.iloc[:cut_train_end]  # Use data up to t
+    train_prices = y.iloc[1:cut_train_end + 1].values  # Use prices from t+1
+    train_prev_prices = y.iloc[:cut_train_end].values  # Use prices from t
+    Ytrain = (train_prices - train_prev_prices) / train_prev_prices
 
     # Validation Set
-    Xval = X.iloc[cut_val_start:cut_val_end - 1]
-    val_prices = y.iloc[cut_val_start:cut_val_end].values
-    Yval = (val_prices[1:] - val_prices[:-1]) / val_prices[:-1]
+    Xval = X.iloc[cut_val_start:cut_val_end]  # Use data up to t
+    val_prices = y.iloc[cut_val_start +
+                        1:cut_val_end + 1].values  # Use prices from t+1
+    # Use prices from t
+    val_prev_prices = y.iloc[cut_val_start:cut_val_end].values
+    Yval = (val_prices - val_prev_prices) / val_prev_prices
 
     # Test Set
-    Xtest = X.iloc[cut_val_end:-1]
-    test_prices = y.iloc[cut_val_end:].values
-    Ytest = (test_prices[1:] - test_prices[:-1]) / test_prices[:-1]
+    Xtest = X.iloc[cut_val_end:-1]  # Use data up to t
+    test_prices = y.iloc[cut_val_end + 1:].values  # Use prices from t+1
+    test_prev_prices = y.iloc[cut_val_end:-1].values  # Use prices from t
+    Ytest = (test_prices - test_prev_prices) / test_prev_prices
 
     # Replace any potential infinite values from division by zero with zero.
     Ytrain = np.nan_to_num(Ytrain, nan=0.0, posinf=0.0, neginf=0.0)
@@ -137,6 +163,8 @@ model3.fit(
     Yval=Yval
 )
 
+
+print(ticker)
 validation_score1 = test_model(model1, Xtest, Ytest)
 validation_score2 = test_model(model2, Xtest, Ytest)
 validation_score3 = test_model(model3, Xtest, Ytest)
