@@ -80,13 +80,22 @@ def process_data(
     y = df[column_to_predict]
 
     Xtrain = X.iloc[:cut_train_end]
-    Ytrain = np.array(y.iloc[:cut_train_end].values)
+    Ytrain = y.iloc[:cut_train_end+1].values
+    for i in range(len(Ytrain)-1):
+        Ytrain[i][0] = (Ytrain[i+1][0]-Ytrain[i][0])/Ytrain[i][0]
+    Ytrain = np.array(Ytrain[:-1])
 
     Xval = X.iloc[cut_val_start:cut_val_end]
-    Yval = np.array(y.iloc[cut_val_start:cut_val_end].values)
+    Yval = y.iloc[cut_val_start:cut_val_end+1].values
+    for i in range(len(Yval)-1):
+        Yval[i][0] = (Yval[i+1][0]-Yval[i][0])/Yval[i][0]
+    Yval = np.array(Yval[:-1])
 
     Xtest = X.iloc[cut_val_end:]
-    Ytest = np.array(y.iloc[cut_val_end:].values)
+    Ytest = y.iloc[cut_val_end:].values
+    for i in range(len(Ytest)-1):
+        Ytest[i][0] = (Ytest[i+1][0]-Ytest[i][0])/Ytest[i][0]
+    Ytest = np.array(Ytest[:-1])
 
     return Xtrain, Ytrain.reshape(-1), Xval, Yval.reshape(-1), Xtest, Ytest.reshape(-1)
 
