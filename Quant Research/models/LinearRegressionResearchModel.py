@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn import metrics
+from sklearn.metrics import r2_score
 from model import ResearchModel
 
 
@@ -23,8 +23,9 @@ class LinearRegressionResearchModel(ResearchModel):
             self.feature_names_ = None
 
         if Xval is not None and Yval is not None:
-            val_score = self.model.score(Xval, Yval)
-            print(f"Validation R^2 Score: {val_score:.4f}")
+            Ypred = self.forward(Xval)
+            self.validation_score_ = r2_score(Yval, Ypred)
+            print(f"Validation R² score: {self.validation_score_:.4f}")
         else:
             self.validation_score_ = None
 
