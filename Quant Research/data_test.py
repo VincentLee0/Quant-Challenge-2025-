@@ -1,9 +1,10 @@
 import yfinance as yf
 from datetime import date, timedelta
 import pandas as pd
+import numpy as np
 
 
-def get_processed_stock_data(ticker='AAPL', years=2, months_to_remove=None):
+def get_processed_stock_data(ticker='LULU', years=2, months_to_remove=None):
 
     if months_to_remove is None:
         months_to_remove = [(2025, 5), (2025, 4),
