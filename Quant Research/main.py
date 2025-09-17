@@ -22,7 +22,7 @@ def process_data(
     purge: int = 0,
 ):
     # Load and copy to avoid side effects
-    df = get_processed_stock_data().copy()
+    df = get_processed_stock_data(ticker=ticker).copy()
 
     # Handle multi-index columns from yfinance
     if isinstance(df.columns, pd.MultiIndex):
