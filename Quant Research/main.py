@@ -97,7 +97,7 @@ def test_model(model, Xtest, Ytest):
     return validation_score_
 
 
-column_to_predict = "High"
+column_to_predict = "Close"
 Xtrain, Ytrain, Xval, Yval, Xtest, Ytest = process_data(
     column_to_predict=column_to_predict)
 
