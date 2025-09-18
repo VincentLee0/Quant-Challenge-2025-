@@ -7,8 +7,8 @@ import numpy as np
 def get_processed_stock_data(ticker, years=2, months_to_remove=None):
 
     if months_to_remove is None:
-        months_to_remove = [(2025, 5), (2025, 4),
-                            (2025, 3), (2024, 12), (2024, 11)]
+        months_to_remove = []  # (2025, 5), (2025, 4),
+        # (2025, 3), (2024, 12), (2024, 11)]
 
     end_date = date.today()
     start_date = end_date - timedelta(days=365 * years)

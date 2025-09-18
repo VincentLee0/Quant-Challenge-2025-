@@ -5,11 +5,12 @@ import pandas as pd
 from models.RandomForestResearchModel import RandomForestResearchModel
 from models.XGBoostResearchModel import XGBoostResearchModel
 from models.LinearRegressionResearchModel import LinearRegressionResearchModel
+from models.ArimaResearchModel import ArimaResearchModel
 
 from sklearn.metrics import r2_score
 
 # configure ticker
-ticker = "UBER"
+ticker = "NVDA"
 
 
 def process_data(
@@ -141,6 +142,7 @@ Xtrain, Ytrain, Xval, Yval, Xtest, Ytest = process_data(
 model1 = RandomForestResearchModel()
 model2 = XGBoostResearchModel()
 model3 = LinearRegressionResearchModel()
+model4 = ArimaResearchModel()
 
 model1.fit(
     Xtrain=Xtrain,
@@ -163,11 +165,17 @@ model3.fit(
     Yval=Yval
 )
 
+model4.fit(
+    Ytrain=Ytrain
+)
+
 
 print(ticker)
 validation_score1 = test_model(model1, Xtest, Ytest)
 validation_score2 = test_model(model2, Xtest, Ytest)
 validation_score3 = test_model(model3, Xtest, Ytest)
+validation_score4 = test_model(model4, Xtest, Ytest)
 print(f"RF Test R² score: {validation_score1:.4f}")
 print(f"XGB Test R² score: {validation_score2:.4f}")
 print(f"LR Test R² score: {validation_score3:.4f}")
+print(f"ARIMA Test R² score: {validation_score4:.4f}")
