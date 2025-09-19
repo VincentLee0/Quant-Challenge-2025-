@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 
-def plot(numbers1, numbers2, name):
+def plot(numbers1, numbers2, name, R_squared):
     plt.figure(figsize=(8, 4))
     plt.grid(True)
-    plt.title("Line Graph")
+    plt.title(f"{name} R²: {R_squared:.4f}")
     plt.xlabel("Index")
     plt.ylabel("Return Rate")
     if not numbers2:

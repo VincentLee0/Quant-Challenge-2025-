@@ -56,7 +56,7 @@ class XGBoostResearchModel(ResearchModel):
         
         Ypred = self.forward(Xval)
         self.validation_score_ = r2_score(Yval, Ypred)
-        plot(Yval.tolist(), Ypred.tolist(), "XGB Validation Results")
+        plot(Yval.tolist(), Ypred.tolist(), "XGB Validation Results", self.validation_score_)
         print(f"Validation R² score: {self.validation_score_:.4f}")
 
         return self

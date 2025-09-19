@@ -10,7 +10,7 @@ from models.ArimaResearchModel import ArimaResearchModel
 from sklearn.metrics import r2_score
 
 # configure ticker
-ticker = "NVDA"
+ticker = "AAPL"
 
 
 def process_data(
