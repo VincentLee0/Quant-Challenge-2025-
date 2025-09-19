@@ -11,7 +11,7 @@ from features import FeatureEngineer
 from sklearn.metrics import r2_score
 
 # configure ticker
-ticker = "NVDA"
+ticker = "LULU"
 
 
 def process_data(

@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 
-def get_processed_stock_data(ticker, years=2, months_to_remove=None):
+def get_processed_stock_data(ticker, years=5, months_to_remove=None):
 
     if months_to_remove is None:
         months_to_remove = []  # (2025, 5), (2025, 4),
