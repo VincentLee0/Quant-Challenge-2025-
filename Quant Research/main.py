@@ -1,16 +1,17 @@
 from data_test import get_processed_stock_data
-from graph import plot
 import pandas as pd
 import numpy as np
+import pandas as pd
 from models.RandomForestResearchModel import RandomForestResearchModel
 from models.XGBoostResearchModel import XGBoostResearchModel
 from models.LinearRegressionResearchModel import LinearRegressionResearchModel
 from models.ArimaResearchModel import ArimaResearchModel
+from features import FeatureEngineer
 
 from sklearn.metrics import r2_score
 
 # configure ticker
-ticker = "AAPL"
+ticker = "NVDA"
 
 
 def process_data(
@@ -40,6 +41,10 @@ def process_data(
     else:
         # Assume the index already represents time; still enforce sort just in case
         df = df.sort_index()
+
+    # Feature Engineering
+    feature_engineer = FeatureEngineer(df)
+    df = feature_engineer.generate_features().get_dataframe()
 
     # Create lagged features for all columns except the target
     columns_to_lag = [col for col in df.columns if col != column_to_predict]
