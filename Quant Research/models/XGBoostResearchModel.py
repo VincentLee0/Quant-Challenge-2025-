@@ -1,6 +1,7 @@
 from xgboost import XGBRegressor
 from model import ResearchModel
 from sklearn.metrics import r2_score
+from graph import plot
 
 class XGBoostResearchModel(ResearchModel):
     def __init__(
@@ -55,6 +56,7 @@ class XGBoostResearchModel(ResearchModel):
         
         Ypred = self.forward(Xval)
         self.validation_score_ = r2_score(Yval, Ypred)
+        plot(Yval.tolist(), Ypred.tolist(), "XGB Validation Results")
         print(f"Validation R² score: {self.validation_score_:.4f}")
 
         return self

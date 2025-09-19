@@ -1,6 +1,7 @@
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 from model import ResearchModel
+from graph import plot
 import numpy as np
 import pandas as pd
 
@@ -61,6 +62,7 @@ class RandomForestResearchModel(ResearchModel):
             y_pred = self.forward(Xval)
             from sklearn.metrics import r2_score
             self.validation_score_ = r2_score(Yval, y_pred)
+            plot(Yval.tolist(), y_pred.tolist(), "RF Validation Results")
             print(f"Validation R² score: {self.validation_score_:.4f}")
         else:
             self.validation_score_ = None
