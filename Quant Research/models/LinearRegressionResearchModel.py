@@ -24,7 +24,8 @@ class LinearRegressionResearchModel(ResearchModel):
         if Xval is not None and Yval is not None:
             Ypred = self.forward(Xval)
             self.validation_score_ = r2_score(Yval, Ypred)
-            plot(Yval.tolist(), Ypred.tolist(), "LR Validation Results", self.validation_score_)
+            plot(Yval.tolist(), Ypred.tolist(),
+                 "LR Validation Results", self.validation_score_)
             print(f"Validation R² score: {self.validation_score_:.4f}")
         else:
             self.validation_score_ = None
